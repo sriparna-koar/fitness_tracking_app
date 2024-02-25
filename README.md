@@ -3,4 +3,5 @@ Here user can add their own usename and add sports activities and arget achieved
 To run the app:
 
 python main.py
+
 Running on http://127.0.0.1:5000
