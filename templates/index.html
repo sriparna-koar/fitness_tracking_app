@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracking App</title>
+    <style>
+        body {
+            background: url('https://www.shutterstock.com/image-photo/crossfit-equipment-on-floor-gym-600nw-756989800.jpg') fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #222; /* Dark navigation bar background color */
+            overflow: hidden;
+        }
+        
+        nav ul li {
+            float: left;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            background-color: #333; /* Darker hover background color */
+        }
+        
+        h1, h2 {
+            color: #fff;
+        }
+        
+        label {
+            color: #fff;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
+            color: #fff;
+            border: none;
+            border-bottom: 1px solid #fff;
+            padding: 12px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            background-color: rgba(255, 255, 255, 0.2); /* Lighter background on focus */
+            outline: none;
+        }
+        
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 25px; /* Rounded corners */
+            padding: 14px 28px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #444; /* Darker hover background color */
+        }
+        
+        .form-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        select {
+            width: calc(100% - 24px); /* Adjust for padding and border */
+        }
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('food') }}">Food</a></li>
+            <li><a href="{{ url_for('diet_chart') }}">Diet Chart</a></li>
+            <li><a href="{{ url_for('view_timers') }}">Timers</a></li>
+        </ul>
+    </nav>
+
+
+   
+    <div class="container">
+        <div class="form-container">
+            <h1 class="form-title">Fitness Tracking App</h1>
+            <p>Here user can add their own usename and add sports activities and arget achieved. They can also set the goal for any particular sports and after performing they can see how much they have ahieved and target goal.Every Player should have unique username.</p>
+            <form id="add-user-form" action="/add_user" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <button type="submit">Add User</button>
+            </form>
+            <form id="search-user-form" action="/search_user" method="post">
+                <label for="search-username">Search User:</label>
+                <input type="text" id="search-username" name="username" required>
+                <button type="submit">Search</button>
+            </form>
+            <h2>Add Activity</h2>
+            <form id="add-activity-form" action="/add_activity" method="post">
+                <label for="username_activity">Username:</label>
+                <input type="text" id="username_activity" name="username" required><br>
+                <label for="activity">Activity:</label>
+                <select id="activity" name="activity">
+                    {% for activity, _ in SPORTS_ACTIVITIES %}
+                    <option value="{{ activity }}">{{ activity }}</option>
+                    {% endfor %}
+                    
+                </select><br>
+                <label for="achieved">Achieved:</label>
+                <input type="number" id="achieved" name="achieved" required><br>
+                <button type="submit">Add Activity</button>
+            </form>
+            
+            <form id="set-goal-form" action="/set_goal" method="post">
+                <label for="username_goal">Username:</label>
+                <input type="text" id="username_goal" name="username" required><br>
+                <label for="activity_goal">Activity:</label>
+                <select id="activity_goal" name="activity">
+                    {% for activity, _ in SPORTS_ACTIVITIES %}
+                    <option value="{{ activity }}">{{ activity }}</option>
+                    {% endfor %}
+                </select><br>
+                <label for="target">Target:</label>
+                <input type="number" id="target" name="target" required><br>
+                <button type="submit">Set Goal</button>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

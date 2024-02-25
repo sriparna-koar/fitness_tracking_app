@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participant Timers & Stopwatch</title>
+    <style>
+        /* Dark shady theme */
+        body {
+            background-color: #111; /* Changed to a darker shade */
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #222; /* Dark navigation bar background color */
+            overflow: hidden;
+        }
+        
+        nav ul li {
+            float: left;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            background-color: #333; /* Darker hover background color */
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        /* Form Styling */
+        form {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        label, input, button {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #666;
+            border-radius: 5px;
+            background-color: #222; 
+            color: #fff;
+        }
+        button[type="submit"], button[type="button"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #800080;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #6a0d6a;
+        }
+       
+        table {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+            text-align: left;
+        }
+        th {
+            background-color: #800080; 
+            color: #fff;
+        }
+        /* Stopwatch Styling */
+        .stopwatch-container {
+            margin-top: 50px;
+        }
+        .stopwatch {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .stopwatch-label {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .stopwatch-point {
+            position: absolute;
+            width: 2px;
+            height: 90px;
+            background-color: #ff0000; 
+            top: 50%;
+            left: 50%;
+            transform-origin: top;
+            transform: translateX(-50%) rotate(0deg);
+            transition: transform 0.05s linear;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .action-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #800080;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .action-buttons button:hover {
+            background-color: #6a0d6a; 
+        }
+    </style>
+    
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('food') }}">Food</a></li>
+            <li><a href="{{ url_for('diet_chart') }}">Diet Chart</a></li>
+
+        </ul>
+    </nav>
+    <h1>Participant Timers & Stopwatch</h1>
+
+    <form method="POST" action="{{ url_for('view_timers') }}">
+        <label for="participant_name">Participant Name:</label>
+        <input type="text" id="participant_name" name="participant_name" required>
+
+     
+        <div class="activity-inputs" id="activity-inputs">
+            <div class="activity-input">
+                <input type="text" name="participant_activities[]" placeholder="Activity" required>
+                <button type="button" onclick="removeActivity(this)">Remove</button>
+            </div>
+        </div>
+
+        <button type="button" onclick="addActivity()">Add Activity</button>
+        <label for="time_spent">Time Spent (in seconds):</label>
+        <input type="number" id="time_spent" name="time_spent" min="1" required>
+        <button type="submit">Submit</button>
+    </form>
+
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Participant</th>
+                <th>Activities</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if participant_data %}
+                {% for participant, data in participant_data.items() %}
+                    <tr>
+                        <td>{{ participant }}</td>
+                        <td>
+                            {% if data and data != 'No participant data found.' %}
+                                {% if data | string %}
+                                    <p>{{ data }}</p>
+                                {% else %}
+                                    {% for activity, time in data.items() %}
+                                        <p>{{ activity }}: {{ time }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            {% else %}
+                                <p>{{ data }}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No participant data found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+        
+    </table>
+   
+
+
+    <h1>Stopwatch</h1>
+    <div class="stopwatch-container">
+        <div>
+            <div class="stopwatch" id="stopwatch">
+                <div class="stopwatch-point" id="stopwatch-point"></div>
+                <div class="stopwatch-label" id="stopwatch-label">00:00:00</div>
+            </div>
+            <div class="action-buttons">
+                <button id="startButton" onclick="startStopwatch()">Start</button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let stopwatchInterval;
+        let stopwatchRunning = false;
+        let stopwatchTime = 0;
+
+        function startStopwatch() {
+            if (!stopwatchRunning) {
+                stopwatchRunning = true;
+                stopwatchInterval = setInterval(updateStopwatch, 10);
+                document.getElementById("startButton").textContent = "Pause";
+                document.getElementById("pauseButton").disabled = false;
+            } else {
+                stopwatchRunning = false;
+                clearInterval(stopwatchInterval);
+                document.getElementById("startButton").textContent = "Resume";
+            }
+        }
+
+        function pauseStopwatch() {
+            startStopwatch();
+            document.getElementById("pauseButton").disabled = true;
+        }
+
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            stopwatchRunning = false;
+            stopwatchTime = 0;
+            document.getElementById("stopwatch-label").textContent = "00:00:00";
+            document.getElementById("startButton").textContent = "Start";
+            document.getElementById("pauseButton").disabled = false;
+            document.getElementById("stopwatch-point").style.transform = "translateX(-50%) rotate(0deg)";
+        }
+        function updateStopwatch() {
+            stopwatchTime += 10;
+            const hours = Math.floor(stopwatchTime / (1000 * 60 * 60));
+            const minutes = Math.floor((stopwatchTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((stopwatchTime % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor((stopwatchTime % 1000) / 10);
+        
+            const formattedTime = padWithZero(hours) + ':' + padWithZero(minutes) + ':' + padWithZero(seconds) + '.' + padWithZero(milliseconds);
+            document.getElementById("stopwatch-label").textContent = formattedTime;
+        
+            const degree = (stopwatchTime / 60000) * 360 % 360;
+            document.getElementById("stopwatch-point").style.transform = 'translateX(-50%) rotate(' + degree + 'deg)';
+        }
+        
+        function padWithZero(value) {
+            return value < 10 ? "0" + value : value;
+        }
+    </script>
+
+
+    
+</body>
+</html>

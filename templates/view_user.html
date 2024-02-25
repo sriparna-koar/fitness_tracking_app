@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View User</title>
+</head>
+<body>
+    <h1>Viewing Fitness Data for {{ username }}</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Achieved</th>
+                <th>Target</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity, data in fitness_data.items() %}
+            <tr>
+                <td>{{ activity }}</td>
+                <td>{{ data.achieved }}</td>
+                <td>{{ data.target }}</td>
+                <td>{{ data.unit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

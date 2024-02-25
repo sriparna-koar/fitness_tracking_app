@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Comparison</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        /* Custom CSS for dark shade theme */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Dark background color */
+            color: #ffffff; /* Light text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #333; /* Dark navigation bar background color */
+            overflow: hidden;
+        }
+
+        nav ul li {
+            float: left;
+        }
+
+        nav ul li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555; /* Darker hover background color */
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Light border color */
+        }
+
+        tr:hover {
+            background-color: #333; /* Darker hover background color */
+        }
+        
+        #activity-chart {
+            height: 500px;
+            background-color: #333; /* Dark chart background color */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('food') }}">Food</a></li>
+            <li><a href="{{ url_for('diet_chart') }}">Diet Chart</a></li>
+            <li><a href="{{ url_for('view_timers') }}">Timers</a></li>
+        </ul>
+    </nav>
+
+    <h1>Fitness Comparison</h1>
+    {% if username %}
+    <h2>{{ username }}'s Fitness Comparison</h2>
+    <div>
+        <table>
+            <tr>
+                <th>Activity</th>
+                <th>Target</th>
+                <th>Achieved</th>
+            </tr>
+            {% for activity, current_data in fitness_data.items() %}
+            <tr>
+                <td>{{ activity }}</td>
+                <td>{{ fitness_targets[activity]['target'] }} {{ fitness_targets[activity]['unit'] }}</td>
+                <td>{{ current_data }} {{ fitness_targets[activity]['unit'] }}</td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div id="{{ activity }}-chart"></div>
+                    <script>
+                        var current_data = {{ current_data|tojson }};
+                        var previous_data = {{ previous_fitness_data.get(activity, 0)|tojson }};
+                        var trace1 = {
+                            x: ['Previous', 'Current'],
+                            y: [previous_data, current_data],
+                            type: 'bar',
+                            name: 'Fitness Level'
+                        };
+                        var data = [trace1];
+                        var layout = {
+                            title: '{{ activity }} Fitness Comparison',
+                            xaxis: {
+                                title: 'Fitness Data'
+                            },
+                            yaxis: {
+                                title: 'Value'
+                            },
+                            plot_bgcolor: '#333', /* Dark plot background color */
+                            paper_bgcolor: '#333', /* Dark paper background color */
+                            font: {
+                                color: '#ffffff' /* Light font color */
+                            }
+                        };
+                        Plotly.newPlot('{{ activity }}-chart', data, layout);
+                    </script>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% else %}
+    <p>No fitness data available.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutritional Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Dark background color */
+            color: #ffffff; /* White text color */
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #333; /* Dark navigation bar background color */
+            overflow: hidden;
+        }
+
+        nav ul li {
+            float: left;
+        }
+
+        nav ul li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #555; /* Darker hover background color */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #333333; /* Darker container background color */
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2); /* Light shadow effect */
+        }
+        h1, h2 {
+            color: #ffffff; /* White heading text color */
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            color: #ffffff; /* White label text color */
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ffffff; /* White border */
+            background-color: #444444; /* Darker input background color */
+            color: #ffffff; /* White text color */
+        }
+        button[type="submit"] {
+            background-color: #4CAF50; /* Green button color */
+            color: #ffffff; /* White button text color */
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Darker green button color on hover */
+        }
+        p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('food') }}">Food</a></li>
+            <li><a href="{{ url_for('diet_chart') }}">Diet Chart</a></li>
+            <li><a href="{{ url_for('view_timers') }}">Timers</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Nutritional Information</h1>
+        <form method="POST">
+            <label for="food_name">Enter Food Name:</label><br>
+            <input type="text" id="food_name" name="food_name" required><br><br>
+            <button type="submit">Get Nutritional Info</button>
+        </form>
+        {% if nutritional_info %}
+            <h2>{{ food_name }}</h2>
+            <p>Calories: {{ nutritional_info.calories }} kcal</p>
+            <p>Protein: {{ nutritional_info.protein }} g</p>
+            <p>Carbohydrate: {{ nutritional_info.carbohydrate }} g</p>
+            <p>Sugar: {{ nutritional_info.sugar }} g</p>
+            {% if nutritional_info.fiber %}
+                <p>Fiber: {{ nutritional_info.fiber }} g</p>
+            {% endif %}
+            {% if nutritional_info.calcium %}
+                <p>Calcium: {{ nutritional_info.calcium }} mg</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

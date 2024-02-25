@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Diet Chart</title>
+</head>
+<body>
+    <h1>Search Diet Chart</h1>
+    <form method="POST" action="/search_diet_chart">
+    <h1>Diet Chart for User: {{ user_name }}</h1>
+    <h2>Breakfast:</h2>
+    <p>{{ diet_plan.breakfast }}</p>
+    
+    <h2>Lunch:</h2>
+    <p>{{ diet_plan.lunch }}</p>
+    
+    <h2>Dinner:</h2>
+    <p>{{ diet_plan.dinner }}</p>
+    
+    <h2>Snacks:</h2>
+    <p>{{ diet_plan.snacks }}</p>
+</body>
+</html>
