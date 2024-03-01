@@ -8,7 +8,7 @@ from flask_caching import Cache
 from flask_socketio import SocketIO
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+secret_key = os.getenv("SECRET_KEY")
 USER_FOLDER = 'static/users'
 DIET_CHART_FOLDER = 'static/diet_charts'
 
